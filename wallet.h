@@ -3,13 +3,14 @@
 
 #include <cryptokernel/storage.h>
 #include <cryptokernel/log.h>
+#include <cryptokernel/blockchain.h>
 
 namespace CryptoCurrency
 {
     class Wallet
     {
         public:
-            Wallet();
+            Wallet(CryptoKernel::Blockchain* Blockchain);
             ~Wallet();
             struct address
             {
@@ -19,11 +20,16 @@ namespace CryptoCurrency
                 double balance;
             };
             address newAddress(std::string name);
+            address getAddressByName(std::string name);
+            address getAddressByKey(std::string publicKey);
+            bool updateAddressBalance(std::string name, double amount);
 
         private:
             CryptoKernel::Storage* addresses;
             CryptoKernel::Log* log;
             Json::Value addressToJson(address Address);
+            CryptoKernel::Blockchain* blockchain;
+            address jsonToAddress(Json::Value Address);
     };
 }
 

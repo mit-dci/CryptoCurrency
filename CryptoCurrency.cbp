@@ -30,7 +30,14 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++14" />
+			<Add directory="../../James" />
 		</Compiler>
+		<Linker>
+			<Add library="../cryptokernel/bin/Debug/libCryptoKernel.a" />
+		</Linker>
+		<Unit filename="wallet.cpp" />
+		<Unit filename="wallet.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

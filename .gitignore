@@ -4,3 +4,6 @@ CryptoKernel.log
 addressesdb
 bin
 obj
+blockdb
+transactiondb
+utxodb
