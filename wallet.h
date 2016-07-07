@@ -32,6 +32,7 @@ namespace CryptoCurrency
             Json::Value addressToJson(address Address);
             CryptoKernel::Blockchain* blockchain;
             address jsonToAddress(Json::Value Address);
+            void rescan();
     };
 }
 
