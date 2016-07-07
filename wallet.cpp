@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 
 #include <cryptokernel/crypto.h>
 
@@ -200,14 +201,48 @@ double CryptoCurrency::Wallet::getTotalBalance()
 
 void CryptoCurrency::Wallet::rescan()
 {
+    std::vector<address> tempAddresses;
     CryptoKernel::Storage::Iterator* it = addresses->newIterator();
     for(it->SeekToFirst(); it->Valid(); it->Next())
     {
         address Address;
         Address = jsonToAddress(it->value());
-        updateAddressBalance(Address.name, blockchain->getBalance(Address.publicKey));
+        Address.balance = blockchain->getBalance(Address.publicKey);
+        tempAddresses.push_back(Address);
     }
     delete it;
+
+    std::vector<address>::iterator it2;
+    for(it2 = tempAddresses.begin(); it2 < tempAddresses.end(); it2++)
+    {
+        updateAddressBalance((*it2).name, blockchain->getBalance((*it2).publicKey));
+    }
+}
+
+void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet)
+{
+    while(true)
+    {
+        CryptoKernel::Blockchain::block Block;
+        Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
+        Block.nonce = 0;
+
+        do
+        {
+            Block.nonce += 1;
+            Block.PoW = blockchain->calculatePoW(Block);
+        }
+        while(!hex_greater(Block.target, Block.PoW));
+
+        CryptoKernel::Blockchain::block previousBlock;
+        previousBlock = blockchain->getBlock(Block.previousBlockId);
+        Block.totalWork = addHex(Block.PoW, previousBlock.totalWork);
+
+        blockchain->submitBlock(Block);
+
+        std::string data = CryptoKernel::Storage::toString(blockchain->blockToJson(Block));
+        std::cout << data << std::endl;
+    }
 }
 
 int main()
@@ -215,28 +250,40 @@ int main()
     CryptoKernel::Blockchain blockchain;
     CryptoCurrency::Wallet wallet(&blockchain);
 
+    std::thread minerThread(miner, &blockchain, &wallet);
+
     while(true)
     {
-        CryptoKernel::Blockchain::block Block;
-        Block = blockchain.generateMiningBlock(wallet.getAddressByName("mining").publicKey);
-        Block.nonce = 0;
+        std::string command;
+        std::cout << "Command: ";
+        std::cin >> command;
 
-        do
+        if(command == "send")
         {
-            Block.nonce += 1;
-            Block.PoW = blockchain.calculatePoW(Block);
+            double amount;
+            std::string publicKey;
+            double fee;
+
+            std::cout << "To: ";
+            std::cin >> publicKey;
+
+            std::cout << "Amount: ";
+            std::cin >> amount;
+
+            std::cout << "Fee: ";
+            std::cin >> fee;
+
+            std::cout << wallet.sendToAddress(publicKey, amount, fee) << std::endl;
         }
-        while(!hex_greater(Block.target, Block.PoW));
+        if(command == "balance")
+        {
+            std::string name;
 
-        CryptoKernel::Blockchain::block previousBlock;
-        previousBlock = blockchain.getBlock(Block.previousBlockId);
-        Block.totalWork = addHex(Block.PoW, previousBlock.totalWork);
+            std::cout << "Name: ";
+            std::cin >> name;
 
-        blockchain.submitBlock(Block);
-
-        std::string data = CryptoKernel::Storage::toString(blockchain.blockToJson(Block));
-        std::cout << data << std::endl;
-        std::cout << blockchain.getBalance(wallet.getAddressByName("mining").publicKey) << std::endl;
+            std::cout << wallet.getAddressByName(name).balance << std::endl;
+        }
     }
 
     return 0;
