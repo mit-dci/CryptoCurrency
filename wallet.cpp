@@ -102,8 +102,13 @@ bool CryptoCurrency::Wallet::updateAddressBalance(std::string name, double amoun
     }
 }
 
-bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount)
+bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount, double fee)
 {
+    if(getTotalBalance() < amount + fee)
+    {
+        return false;
+    }
+
     std::vector<CryptoKernel::Blockchain::output> inputs;
     CryptoKernel::Storage::Iterator* it = addresses->newIterator();
     for(it->SeekToFirst(); it->Valid(); it->Next())
@@ -126,7 +131,7 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount)
     std::vector<CryptoKernel::Blockchain::output>::iterator it2;
     for(it2 = inputs.begin(); it2 < inputs.end(); it2++)
     {
-        if(accumulator < amount + 0.1)
+        if(accumulator < amount + fee)
         {
             address Address = getAddressByKey((*it2).publicKey);
             crypto.setPrivateKey(Address.privateKey);
@@ -153,7 +158,7 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount)
     toThem.id = blockchain->calculateOutputId(toThem);
 
     CryptoKernel::Blockchain::output change;
-    change.value = accumulator - amount - 0.1;
+    change.value = accumulator - amount - fee;
 
     address Address = newAddress("change" + now);
 
@@ -171,6 +176,20 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount)
     blockchain->submitTransaction(tx);
 
     return true;
+}
+
+double CryptoCurrency::Wallet::getTotalBalance()
+{
+    double balance = 0;
+
+    CryptoKernel::Storage::Iterator* it = addresses->newIterator();
+    for(it->SeekToFirst(); it->Valid(); it->Next())
+    {
+        balance += it->value()["balance"].asDouble();
+    }
+    delete it;
+
+    return balance;
 }
 
 int main()
