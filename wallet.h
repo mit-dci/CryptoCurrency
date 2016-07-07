@@ -23,6 +23,7 @@ namespace CryptoCurrency
             address getAddressByName(std::string name);
             address getAddressByKey(std::string publicKey);
             bool updateAddressBalance(std::string name, double amount);
+            bool sendToAddress(std::string publicKey, double amount);
 
         private:
             CryptoKernel::Storage* addresses;
