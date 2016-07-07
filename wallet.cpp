@@ -197,7 +197,29 @@ int main()
     CryptoKernel::Blockchain blockchain;
     CryptoCurrency::Wallet wallet(&blockchain);
 
-    std::cout << wallet.getAddressByName("test address").publicKey;
+    while(true)
+    {
+        CryptoKernel::Blockchain::block Block;
+        Block = blockchain.generateMiningBlock(wallet.getAddressByName("mining").publicKey);
+        Block.nonce = 0;
+
+        do
+        {
+            Block.nonce += 1;
+            Block.PoW = blockchain.calculatePoW(Block);
+        }
+        while(!hex_greater(Block.target, Block.PoW));
+
+        CryptoKernel::Blockchain::block previousBlock;
+        previousBlock = blockchain.getBlock(Block.previousBlockId);
+        Block.totalWork = addHex(Block.PoW, previousBlock.totalWork);
+
+        blockchain.submitBlock(Block);
+
+        std::string data = CryptoKernel::Storage::toString(blockchain.blockToJson(Block));
+        std::cout << data << std::endl;
+        std::cout << blockchain.getBalance(wallet.getAddressByName("mining").publicKey) << std::endl;
+    }
 
     return 0;
 }
