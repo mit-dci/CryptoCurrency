@@ -1,5 +1,6 @@
 #include <iostream>
 #include <thread>
+#include <random>
 
 #include <cryptokernel/crypto.h>
 
@@ -165,7 +166,9 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount,
     CryptoKernel::Blockchain::output change;
     change.value = accumulator - amount - fee;
 
-    address Address = newAddress("change" + now);
+    std::stringstream buffer;
+    buffer << now << "_change";
+    address Address = newAddress(buffer.str());
 
     change.publicKey = Address.publicKey;
     change.nonce = now;
@@ -224,8 +227,22 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet)
     while(true)
     {
         CryptoKernel::Blockchain::block Block;
+        wallet->newAddress("mining");
         Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
         Block.nonce = 0;
+
+        time_t t = std::time(0);
+        uint64_t now = static_cast<uint64_t> (t);
+
+        std::stringstream buffer;
+        buffer << now << "_mining";
+
+        std::default_random_engine generator(now);
+        std::uniform_int_distribution<unsigned int> distribution(0, wallet->getTotalBalance() - 1);
+
+        wallet->newAddress(buffer.str());
+        std::string publicKey = wallet->getAddressByName(buffer.str()).publicKey;
+        wallet->sendToAddress(publicKey, distribution(generator), 0.1);
 
         do
         {
@@ -241,7 +258,9 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet)
         blockchain->submitBlock(Block);
 
         std::string data = CryptoKernel::Storage::toString(blockchain->blockToJson(Block));
-        std::cout << data << std::endl;
+        std::cout << data << std::endl << std::endl << std::endl;
+
+        //std::cout << "Mining Address: " << wallet->getTotalBalance() << std::endl;
     }
 }
 
@@ -253,6 +272,11 @@ int main()
     std::thread minerThread(miner, &blockchain, &wallet);
 
     while(true)
+    {
+
+    }
+
+    /*while(true)
     {
         std::string command;
         std::cout << "Command: ";
@@ -284,7 +308,7 @@ int main()
 
             std::cout << wallet.getAddressByName(name).balance << std::endl;
         }
-    }
+    }*/
 
     return 0;
 }
