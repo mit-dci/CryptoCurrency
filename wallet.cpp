@@ -130,8 +130,6 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount,
     delete it;
 
     std::vector<CryptoKernel::Blockchain::output> toSpend;
-    CryptoKernel::Crypto crypto;
-
 
     double accumulator = 0;
     std::vector<CryptoKernel::Blockchain::output>::iterator it2;
@@ -140,13 +138,10 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount,
         if(accumulator < amount + fee)
         {
             address Address = getAddressByKey((*it2).publicKey);
-            crypto.setPrivateKey(Address.privateKey);
-            accumulator += (*it2).value;
-            (*it2).signature = crypto.sign((*it2).id);
             toSpend.push_back(*it2);
-
             Address.balance -= (*it2).value;
             updateAddressBalance(Address.name, Address.balance);
+            accumulator += (*it2).value;
         }
         else
         {
@@ -173,6 +168,20 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount,
     change.publicKey = Address.publicKey;
     change.nonce = now;
     change.id = blockchain->calculateOutputId(change);
+
+    CryptoKernel::Crypto crypto;
+
+    std::string outputHash = "";
+    outputHash = crypto.sha256(outputHash + toThem.id);
+    outputHash = crypto.sha256(outputHash + change.id);
+
+    for(it2 = toSpend.begin(); it2 < toSpend.end(); it2++)
+    {
+        address Address = getAddressByKey((*it2).publicKey);
+        crypto.setPrivateKey(Address.privateKey);
+        std::string signature = crypto.sign((*it2).id + outputHash);
+        (*it2).signature = signature;
+    }
 
     CryptoKernel::Blockchain::transaction tx;
     tx.inputs = toSpend;
@@ -224,25 +233,29 @@ void CryptoCurrency::Wallet::rescan()
 
 void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet)
 {
+    CryptoKernel::Blockchain::block Block;
+    wallet->newAddress("mining");
+
+    time_t t = std::time(0);
+    uint64_t now = static_cast<uint64_t> (t);
+
+    std::stringstream buffer;
+    buffer << now << "_mining";
+
+    std::default_random_engine generator(now);
+    std::uniform_int_distribution<unsigned int> distribution(0, wallet->getTotalBalance() - 1);
+
+    wallet->newAddress(buffer.str());
+    std::string publicKey = wallet->getAddressByName(buffer.str()).publicKey;
+    wallet->sendToAddress(publicKey, distribution(generator), 0.1);
+
     while(true)
     {
-        CryptoKernel::Blockchain::block Block;
-        wallet->newAddress("mining");
         Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
         Block.nonce = 0;
 
-        time_t t = std::time(0);
-        uint64_t now = static_cast<uint64_t> (t);
-
-        std::stringstream buffer;
-        buffer << now << "_mining";
-
-        std::default_random_engine generator(now);
-        std::uniform_int_distribution<unsigned int> distribution(0, wallet->getTotalBalance() - 1);
-
-        wallet->newAddress(buffer.str());
-        std::string publicKey = wallet->getAddressByName(buffer.str()).publicKey;
-        wallet->sendToAddress(publicKey, distribution(generator), 0.1);
+        t = std::time(0);
+        now = static_cast<uint64_t> (t);
 
         do
         {
@@ -260,7 +273,16 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet)
         std::string data = CryptoKernel::Storage::toString(blockchain->blockToJson(Block));
         std::cout << data << std::endl << std::endl << std::endl;
 
-        //std::cout << "Mining Address: " << wallet->getTotalBalance() << std::endl;
+        t = std::time(0);
+        now = static_cast<uint64_t> (t);
+
+        buffer.clear();
+        buffer << now << "_mining";
+
+        wallet->newAddress(buffer.str());
+        std::string publicKey = wallet->getAddressByName(buffer.str()).publicKey;
+        wallet->sendToAddress(publicKey, distribution(generator), 0.1);
+
     }
 }
 
