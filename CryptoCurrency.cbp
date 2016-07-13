@@ -36,6 +36,8 @@
 		<Linker>
 			<Add library="../cryptokernel/bin/Debug/libCryptoKernel.a" />
 		</Linker>
+		<Unit filename="protocol.cpp" />
+		<Unit filename="protocol.h" />
 		<Unit filename="wallet.cpp" />
 		<Unit filename="wallet.h" />
 		<Extensions>

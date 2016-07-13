@@ -5,12 +5,14 @@
 #include <cryptokernel/log.h>
 #include <cryptokernel/blockchain.h>
 
+#include "protocol.h"
+
 namespace CryptoCurrency
 {
     class Wallet
     {
         public:
-            Wallet(CryptoKernel::Blockchain* Blockchain);
+            Wallet(CryptoKernel::Blockchain* Blockchain, CryptoCurrency::Protocol* Protocol);
             ~Wallet();
             struct address
             {
@@ -29,6 +31,7 @@ namespace CryptoCurrency
         private:
             CryptoKernel::Storage* addresses;
             CryptoKernel::Log* log;
+            CryptoCurrency::Protocol* protocol;
             Json::Value addressToJson(address Address);
             CryptoKernel::Blockchain* blockchain;
             address jsonToAddress(Json::Value Address);

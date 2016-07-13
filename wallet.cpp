@@ -6,8 +6,9 @@
 
 #include "wallet.h"
 
-CryptoCurrency::Wallet::Wallet(CryptoKernel::Blockchain* Blockchain)
+CryptoCurrency::Wallet::Wallet(CryptoKernel::Blockchain* Blockchain, CryptoCurrency::Protocol* Protocol)
 {
+    protocol = Protocol;
     blockchain = Blockchain;
     log = new CryptoKernel::Log();
     addresses = new CryptoKernel::Storage("./addressesdb");
@@ -192,6 +193,8 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount,
 
     blockchain->submitTransaction(tx);
 
+    protocol->submitTransaction(tx);
+
     return true;
 }
 
@@ -231,7 +234,7 @@ void CryptoCurrency::Wallet::rescan()
     }
 }
 
-void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet)
+void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet, CryptoCurrency::Protocol* protocol)
 {
     CryptoKernel::Blockchain::block Block;
     wallet->newAddress("mining");
@@ -269,6 +272,7 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet)
         Block.totalWork = addHex(Block.PoW, previousBlock.totalWork);
 
         blockchain->submitBlock(Block);
+        protocol->submitBlock(Block);
 
         std::string data = CryptoKernel::Storage::toString(blockchain->blockToJson(Block));
         std::cout << data << std::endl << std::endl << std::endl;
@@ -289,9 +293,9 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet)
 int main()
 {
     CryptoKernel::Blockchain blockchain;
-    CryptoCurrency::Wallet wallet(&blockchain);
-
-    std::thread minerThread(miner, &blockchain, &wallet);
+    CryptoCurrency::Protocol protocol(&blockchain);
+    CryptoCurrency::Wallet wallet(&blockchain, &protocol);
+    std::thread minerThread(miner, &blockchain, &wallet, &protocol);
 
     while(true)
     {
