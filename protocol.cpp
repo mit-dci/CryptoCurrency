@@ -22,22 +22,29 @@ void CryptoCurrency::Protocol::handleEvent()
     {
         std::string message = network->popMessage();
 
-        Json::Value command = CryptoKernel::Storage::toJson(message);
-        if(command["method"].asString() == "block")
+        if(message == "")
         {
-            CryptoKernel::Blockchain::block Block = blockchain->jsonToBlock(command["data"]);
-            if(blockchain->submitBlock(Block))
-            {
-                submitBlock(Block);
-            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
-
-        if(command["method"].asString() == "transaction")
+        else
         {
-            CryptoKernel::Blockchain::transaction tx = blockchain->jsonToTransaction(command["data"]);
-            if(blockchain->submitTransaction(tx))
+            Json::Value command = CryptoKernel::Storage::toJson(message);
+            if(command["method"].asString() == "block")
             {
-                submitTransaction(tx);
+                CryptoKernel::Blockchain::block Block = blockchain->jsonToBlock(command["data"]);
+                if(blockchain->submitBlock(Block))
+                {
+                    submitBlock(Block);
+                }
+            }
+
+            else if(command["method"].asString() == "transaction")
+            {
+                CryptoKernel::Blockchain::transaction tx = blockchain->jsonToTransaction(command["data"]);
+                if(blockchain->submitTransaction(tx))
+                {
+                    submitTransaction(tx);
+                }
             }
         }
     }
