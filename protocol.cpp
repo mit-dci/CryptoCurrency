@@ -46,6 +46,49 @@ void CryptoCurrency::Protocol::handleEvent()
                     submitTransaction(tx);
                 }
             }
+
+            else if(command["method"].asString() == "blocks")
+            {
+                std::vector<CryptoKernel::Blockchain::block> blocks;
+                for(unsigned int i = 0; i < command["data"].size(); i++)
+                {
+                    blocks.push_back(blockchain->jsonToBlock(command["data"][i]));
+                }
+
+                std::string firstId = "";
+                std::vector<CryptoKernel::Blockchain::block>::iterator it;
+                for(it = blocks.begin(); it < blocks.end(); it++)
+                {
+                    if(blockchain->getBlock((*it).id).id != (*it).id && blockchain->getBlock((*it).previousBlockId).previousBlockId == (*it).previousBlockId)
+                    {
+                        firstId = (*it).id;
+                    }
+                }
+
+                if(firstId != "")
+                {
+                    std::string nextId = firstId;
+                    while(nextId != blockchain->getBlock(nextId).id)
+                    {
+                        for(it = blocks.begin(); it < blocks.end(); it++)
+                        {
+                            if((*it).id == nextId)
+                            {
+                                blockchain->submitBlock((*it));
+                                std::vector<CryptoKernel::Blockchain::block>::iterator it2;
+                                for(it2 = blocks.begin(); it2 < blocks.end(); it2++)
+                                {
+                                    if((*it2).previousBlockId == (*it).id)
+                                    {
+                                        nextId = (*it2).id;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
