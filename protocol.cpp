@@ -6,7 +6,7 @@ CryptoCurrency::Protocol::Protocol(CryptoKernel::Blockchain* Blockchain)
     log = new CryptoKernel::Log();
     network = new CryptoKernel::Network(log);
 
-    eventThread = new std::thread(&handleEvent, this);
+    eventThread = new std::thread(&CryptoCurrency::Protocol::handleEvent, this);
 }
 
 CryptoCurrency::Protocol::~Protocol()
