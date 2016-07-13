@@ -292,6 +292,7 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
 
 int main()
 {
+    CryptoKernel::Crypto::init();
     CryptoKernel::Blockchain blockchain;
     CryptoCurrency::Protocol protocol(&blockchain);
     CryptoCurrency::Wallet wallet(&blockchain, &protocol);
@@ -299,8 +300,10 @@ int main()
 
     while(true)
     {
-
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
+
+    CryptoKernel::Crypto::destroy();
 
     /*while(true)
     {
