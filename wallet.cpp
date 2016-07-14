@@ -262,6 +262,11 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
 
         do
         {
+            if(Block.nonce % 1000 == 0)
+            {
+                Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
+            }
+
             Block.nonce += 1;
             Block.PoW = blockchain->calculatePoW(Block);
         }
