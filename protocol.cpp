@@ -32,7 +32,15 @@ void CryptoCurrency::Protocol::handleEvent()
             if(command["method"].asString() == "block")
             {
                 CryptoKernel::Blockchain::block Block = blockchain->jsonToBlock(command["data"]);
-                if(blockchain->submitBlock(Block))
+                if(blockchain->getBlock(Block.previousBlockId).id != Block.previousBlockId)
+                {
+                    Json::Value send;
+                    send["method"] = "send";
+                    send["data"] = Block.id;
+
+                    network->sendMessage(CryptoKernel::Storage::toString(send));
+                }
+                else if(blockchain->submitBlock(Block))
                 {
                     submitBlock(Block);
                 }
@@ -88,6 +96,29 @@ void CryptoCurrency::Protocol::handleEvent()
                         }
                     }
                 }
+            }
+            else if(command["method"].asString() == "send")
+            {
+                std::string tipId = command["data"].asString();
+                std::vector<CryptoKernel::Blockchain::block> blocks;
+
+                while(blocks.size() < 150 && tipId != "")
+                {
+                    blocks.push_back(blockchain->getBlock(tipId));
+                    tipId = blockchain->getBlock(tipId).previousBlockId;
+                }
+
+                Json::Value returning;
+
+                returning["method"] = "blocks";
+
+                std::vector<CryptoKernel::Blockchain::block>::iterator it;
+                for(it = blocks.begin(); it < blocks.end(); it++)
+                {
+                    returning["data"].append(blockchain->blockToJson(*it));
+                }
+
+                network->sendMessage(CryptoKernel::Storage::toString(returning));
             }
         }
     }
