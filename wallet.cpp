@@ -172,9 +172,10 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount,
 
     CryptoKernel::Crypto crypto;
 
-    std::string outputHash = "";
-    outputHash = crypto.sha256(outputHash + toThem.id);
-    outputHash = crypto.sha256(outputHash + change.id);
+    std::vector<CryptoKernel::Blockchain::output> outputs;
+    outputs.push_back(change);
+    outputs.push_back(toThem);
+    std::string outputHash = blockchain->calculateOutputSetId(outputs);
 
     for(it2 = toSpend.begin(); it2 < toSpend.end(); it2++)
     {
