@@ -263,7 +263,7 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
 
         do
         {
-            if(Block.nonce % 1000 == 0)
+            if(Block.nonce % 1000000 == 0)
             {
                 Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
             }
@@ -292,7 +292,6 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
         wallet->newAddress(buffer.str());
         std::string publicKey = wallet->getAddressByName(buffer.str()).publicKey;
         wallet->sendToAddress(publicKey, distribution(generator), 0.1);
-
     }
 }
 
