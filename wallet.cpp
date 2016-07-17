@@ -263,9 +263,10 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
 
         do
         {
-            if(Block.nonce % 1000000 == 0)
+            if(Block.nonce % 50000 == 0)
             {
                 Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
+                std::cout << "Tip: " << CryptoKernel::Storage::toString(blockchain->blockToJson(blockchain->getBlock("tip"))) << std::endl;
             }
 
             Block.nonce += 1;
@@ -279,9 +280,6 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
 
         blockchain->submitBlock(Block);
         protocol->submitBlock(Block);
-
-        std::string data = CryptoKernel::Storage::toString(blockchain->blockToJson(Block));
-        std::cout << data << std::endl << std::endl << std::endl;
 
         t = std::time(0);
         now = static_cast<uint64_t> (t);
