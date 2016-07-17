@@ -102,7 +102,7 @@ void CryptoCurrency::Protocol::handleEvent()
                 std::string tipId = command["data"].asString();
                 std::vector<CryptoKernel::Blockchain::block> blocks;
 
-                while(blocks.size() < 150 && tipId != "")
+                while(blocks.size() < 10 && tipId != "")
                 {
                     blocks.push_back(blockchain->getBlock(tipId));
                     tipId = blockchain->getBlock(tipId).previousBlockId;

@@ -266,7 +266,6 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
             if(Block.nonce % 50000 == 0)
             {
                 Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
-                std::cout << "Tip: " << CryptoKernel::Storage::toString(blockchain->blockToJson(blockchain->getBlock("tip"))) << std::endl;
             }
 
             Block.nonce += 1;
