@@ -266,6 +266,7 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
             if(Block.nonce % 50000 == 0)
             {
                 Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
+                Block.nonce = 0;
             }
 
             Block.nonce += 1;
@@ -302,7 +303,7 @@ int main()
 
     while(true)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(600000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(120000));
         protocol.submitBlock(blockchain.getBlock("tip"));
         std::vector<CryptoKernel::Blockchain::transaction> unconfirmedTransactions = blockchain.getUnconfirmedTransactions();
         std::vector<CryptoKernel::Blockchain::transaction>::iterator it;
