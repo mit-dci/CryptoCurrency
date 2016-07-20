@@ -67,7 +67,7 @@ void CryptoCurrency::Protocol::handleEvent()
                 std::vector<CryptoKernel::Blockchain::block>::iterator it;
                 for(it = blocks.begin(); it < blocks.end(); it++)
                 {
-                    if(blockchain->getBlock((*it).id).id != (*it).id && blockchain->getBlock((*it).previousBlockId).previousBlockId == (*it).previousBlockId)
+                    if(blockchain->getBlock((*it).id).id != (*it).id && blockchain->getBlock((*it).previousBlockId).id == (*it).previousBlockId)
                     {
                         firstId = (*it).id;
                     }
