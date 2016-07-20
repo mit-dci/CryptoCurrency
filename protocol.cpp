@@ -1,3 +1,6 @@
+#include <list>
+#include <algorithm>
+
 #include "protocol.h"
 
 CryptoCurrency::Protocol::Protocol(CryptoKernel::Blockchain* Blockchain)
@@ -18,6 +21,8 @@ CryptoCurrency::Protocol::~Protocol()
 
 void CryptoCurrency::Protocol::handleEvent()
 {
+    std::list<std::string> broadcastTransactions;
+
     while(true)
     {
         std::string message = network->popMessage();
@@ -49,8 +54,9 @@ void CryptoCurrency::Protocol::handleEvent()
             else if(command["method"].asString() == "transaction")
             {
                 CryptoKernel::Blockchain::transaction tx = blockchain->jsonToTransaction(command["data"]);
-                if(blockchain->submitTransaction(tx))
+                if(blockchain->submitTransaction(tx) && std::find(broadcastTransactions.begin(), broadcastTransactions.end(), tx.id) != broadcastTransactions.end())
                 {
+                    broadcastTransactions.push_back(tx.id);
                     submitTransaction(tx);
                 }
             }
