@@ -303,7 +303,6 @@ int main()
 
     while(true)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(120000));
         protocol.submitBlock(blockchain.getBlock("tip"));
         std::vector<CryptoKernel::Blockchain::transaction> unconfirmedTransactions = blockchain.getUnconfirmedTransactions();
         std::vector<CryptoKernel::Blockchain::transaction>::iterator it;
@@ -311,6 +310,7 @@ int main()
         {
             protocol.submitTransaction(*it);
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(120000));
     }
 
     CryptoKernel::Crypto::destroy();
