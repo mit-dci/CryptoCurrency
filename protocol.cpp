@@ -81,14 +81,18 @@ void CryptoCurrency::Protocol::handleEvent()
 
                 if(firstId != "")
                 {
+                    bool status = true;
                     std::string nextId = firstId;
-                    while(nextId != blockchain->getBlock(nextId).id)
+                    while(nextId != blockchain->getBlock(nextId).id && status)
                     {
                         for(it = blocks.begin(); it < blocks.end(); it++)
                         {
                             if((*it).id == nextId)
                             {
-                                blockchain->submitBlock((*it));
+                                if(!blockchain->submitBlock((*it)))
+                                {
+                                    status = false;
+                                }
                                 std::vector<CryptoKernel::Blockchain::block>::iterator it2;
                                 for(it2 = blocks.begin(); it2 < blocks.end(); it2++)
                                 {
