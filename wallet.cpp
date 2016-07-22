@@ -276,7 +276,8 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
 
         CryptoKernel::Blockchain::block previousBlock;
         previousBlock = blockchain->getBlock(Block.previousBlockId);
-        Block.totalWork = addHex(Block.PoW, previousBlock.totalWork);
+        std::string inverse = subtractHex("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", Block.PoW);
+        Block.totalWork = addHex(inverse, previousBlock.totalWork);
 
         blockchain->submitBlock(Block);
         protocol->submitBlock(Block);
