@@ -265,8 +265,9 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
         {
             if(Block.nonce % 50000 == 0)
             {
+                uint64_t nonce = Block.nonce;
                 Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
-                Block.nonce = 0;
+                Block.nonce = nonce;
             }
 
             Block.nonce += 1;
