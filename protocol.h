@@ -9,7 +9,7 @@ namespace CryptoCurrency
     class Protocol
     {
         public:
-            Protocol(CryptoKernel::Blockchain* Blockchain);
+            Protocol(CryptoKernel::Blockchain* Blockchain, CryptoKernel::Log* GlobalLog);
             ~Protocol();
             bool submitTransaction(CryptoKernel::Blockchain::transaction tx);
             bool submitBlock(CryptoKernel::Blockchain::block Block);

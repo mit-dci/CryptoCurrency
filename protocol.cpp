@@ -3,10 +3,10 @@
 
 #include "protocol.h"
 
-CryptoCurrency::Protocol::Protocol(CryptoKernel::Blockchain* Blockchain)
+CryptoCurrency::Protocol::Protocol(CryptoKernel::Blockchain* Blockchain, CryptoKernel::Log* GlobalLog)
 {
-    blockchain = Blockchain;
-    log = new CryptoKernel::Log();
+    blockchain = Blockchain;;
+    log = GlobalLog;
     network = new CryptoKernel::Network(log);
 
     eventThread = new std::thread(&CryptoCurrency::Protocol::handleEvent, this);

@@ -298,8 +298,9 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
 int main()
 {
     CryptoKernel::Crypto::init();
-    CryptoKernel::Blockchain blockchain;
-    CryptoCurrency::Protocol protocol(&blockchain);
+    CryptoKernel::Log log("CryptoKernel.log", true);
+    CryptoKernel::Blockchain blockchain(&log);
+    CryptoCurrency::Protocol protocol(&blockchain, &log);
     CryptoCurrency::Wallet wallet(&blockchain, &protocol);
     std::thread minerThread(miner, &blockchain, &wallet, &protocol);
 
@@ -316,40 +317,6 @@ int main()
     }
 
     CryptoKernel::Crypto::destroy();
-
-    /*while(true)
-    {
-        std::string command;
-        std::cout << "Command: ";
-        std::cin >> command;
-
-        if(command == "send")
-        {
-            double amount;
-            std::string publicKey;
-            double fee;
-
-            std::cout << "To: ";
-            std::cin >> publicKey;
-
-            std::cout << "Amount: ";
-            std::cin >> amount;
-
-            std::cout << "Fee: ";
-            std::cin >> fee;
-
-            std::cout << wallet.sendToAddress(publicKey, amount, fee) << std::endl;
-        }
-        if(command == "balance")
-        {
-            std::string name;
-
-            std::cout << "Name: ";
-            std::cin >> name;
-
-            std::cout << wallet.getAddressByName(name).balance << std::endl;
-        }
-    }*/
 
     return 0;
 }
