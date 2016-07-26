@@ -22,6 +22,7 @@ CryptoCurrency::Protocol::~Protocol()
 void CryptoCurrency::Protocol::handleEvent()
 {
     std::list<std::string> broadcastTransactions;
+    CryptoKernel::Storage blockBuffer("./blockbuffer");
 
     while(true)
     {
@@ -37,6 +38,7 @@ void CryptoCurrency::Protocol::handleEvent()
             if(command["method"].asString() == "block")
             {
                 CryptoKernel::Blockchain::block Block = blockchain->jsonToBlock(command["data"]);
+                bool blockExists = (blockchain->getBlock(Block.id).id == Block.id);
                 if(blockchain->getBlock(Block.previousBlockId).id != Block.previousBlockId)
                 {
                     Json::Value send;
@@ -45,7 +47,7 @@ void CryptoCurrency::Protocol::handleEvent()
 
                     network->sendMessage(CryptoKernel::Storage::toString(send));
                 }
-                else if(blockchain->submitBlock(Block))
+                else if(blockchain->submitBlock(Block) && !blockExists)
                 {
                     submitBlock(Block);
                 }
@@ -63,69 +65,102 @@ void CryptoCurrency::Protocol::handleEvent()
 
             else if(command["method"].asString() == "blocks")
             {
-                std::vector<CryptoKernel::Blockchain::block> blocks;
                 for(unsigned int i = 0; i < command["data"].size(); i++)
                 {
-                    blocks.push_back(blockchain->jsonToBlock(command["data"][i]));
+                    blockBuffer.store(command["data"][i]["id"].asString(), command["data"][i]);
                 }
 
-                std::string firstId = "";
-                std::vector<CryptoKernel::Blockchain::block>::iterator it;
-                for(it = blocks.begin(); it < blocks.end(); it++)
+                //Find first block that doesn't exist with a previous block that does exist
+                std::string bottomId = "";
+                CryptoKernel::Storage::Iterator* it = blockBuffer.newIterator();
+                for(it->SeekToFirst(); it->Valid(); it->Next())
                 {
-                    if(blockchain->getBlock((*it).id).id != (*it).id && blockchain->getBlock((*it).previousBlockId).id == (*it).previousBlockId)
+                    CryptoKernel::Blockchain::block Block = blockchain->jsonToBlock(it->value());
+                    if(Block.id != blockchain->getBlock(Block.id).id && Block.previousBlockId == blockchain->getBlock(Block.previousBlockId).id)
                     {
-                        firstId = (*it).id;
+                        bottomId = Block.id;
+                        break;
                     }
                 }
+                delete it;
 
-                if(firstId != "")
+                //If found, trace up to the highest block we have adding each one
+                if(bottomId != "")
                 {
-                    bool status = true;
-                    std::string nextId = firstId;
-                    while(nextId != blockchain->getBlock(nextId).id && status)
+                    bool found = false;
+                    do
                     {
-                        for(it = blocks.begin(); it < blocks.end(); it++)
+                        found = false;
+                        CryptoKernel::Blockchain::block Block = blockchain->jsonToBlock(blockBuffer.get(bottomId));
+                        if(!blockchain->submitBlock(Block))
                         {
-                            if((*it).id == nextId)
+                            found = false;
+                        }
+                        else
+                        {
+                            blockBuffer.erase(Block.id);
+                            it = blockBuffer.newIterator();
+                            for(it->SeekToFirst(); it->Valid(); it->Next())
                             {
-                                if(!blockchain->submitBlock((*it)))
+                                CryptoKernel::Blockchain::block nextBlock = blockchain->jsonToBlock(it->value());
+                                if(nextBlock.previousBlockId == Block.id)
                                 {
-                                    status = false;
+                                    bottomId = nextBlock.id;
+                                    found = true;
+                                    break;
                                 }
-                                std::vector<CryptoKernel::Blockchain::block>::iterator it2;
-                                for(it2 = blocks.begin(); it2 < blocks.end(); it2++)
-                                {
-                                    if((*it2).previousBlockId == (*it).id)
-                                    {
-                                        nextId = (*it2).id;
-                                    }
-                                }
+                            }
+                            delete it;
+                        }
+                    }
+                    while(found);
+                }
+                else
+                {
+                    //Otherwise, request the next set of missing blocks
+                    it = blockBuffer.newIterator();
+                    bool found = false;
+                    std::string nextBlockId = "";
+                    do
+                    {
+                        found = false;
+                        for(it->SeekToFirst(); it->Valid(); it->Next())
+                        {
+                            CryptoKernel::Blockchain::block nextBlock = blockchain->jsonToBlock(it->value());
+                            if(nextBlockId == "" || nextBlock.id == nextBlockId)
+                            {
+                                nextBlockId = nextBlock.previousBlockId;
+                                found = true;
                                 break;
                             }
                         }
                     }
+                    while(found);
+                    delete it;
+
+                    Json::Value send;
+                    send["method"] = "send";
+                    send["data"] = nextBlockId;
+
+                    network->sendMessage(CryptoKernel::Storage::toString(send));
                 }
             }
             else if(command["method"].asString() == "send")
             {
                 std::string tipId = command["data"].asString();
-                std::vector<CryptoKernel::Blockchain::block> blocks;
-
-                while(tipId != "")
-                {
-                    blocks.push_back(blockchain->getBlock(tipId));
-                    tipId = blockchain->getBlock(tipId).previousBlockId;
-                }
 
                 Json::Value returning;
-
                 returning["method"] = "blocks";
 
-                std::vector<CryptoKernel::Blockchain::block>::iterator it;
-                for(it = blocks.begin(); it < blocks.end(); it++)
+                for(unsigned int i = 0; i < 200; i++)
                 {
-                    returning["data"].append(blockchain->blockToJson(*it));
+                    CryptoKernel::Blockchain::block Block = blockchain->getBlock(tipId);
+                    returning["data"].append(blockchain->blockToJson(Block));
+                    if(Block.previousBlockId == "")
+                    {
+                        break;
+                    }
+                    tipId = Block.previousBlockId;
                 }
 
                 network->sendMessage(CryptoKernel::Storage::toString(returning));
