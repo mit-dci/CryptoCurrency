@@ -63,69 +63,48 @@ void CryptoCurrency::Protocol::handleEvent()
 
             else if(command["method"].asString() == "blocks")
             {
-                std::vector<CryptoKernel::Blockchain::block> blocks;
-                for(unsigned int i = 0; i < command["data"].size(); i++)
+                for(unsigned int i = 0; i < command["data"]["blocks"].size(); i++)
                 {
-                    blocks.push_back(blockchain->jsonToBlock(command["data"][i]));
+                    CryptoKernel::Blockchain::block Block = blockchain->jsonToBlock(command["data"]["blocks"][i]);
+                    blockchain->submitBlock(Block);
                 }
 
-                std::string firstId = "";
-                std::vector<CryptoKernel::Blockchain::block>::iterator it;
-                for(it = blocks.begin(); it < blocks.end(); it++)
+                bool found = true;
+                std::string blockId = command["data"]["tipId"].asString();
+                while(found)
                 {
-                    if(blockchain->getBlock((*it).id).id != (*it).id && blockchain->getBlock((*it).previousBlockId).id == (*it).previousBlockId)
+                    CryptoKernel::Blockchain::block Block = blockchain->getBlock(blockId);
+                    if(Block.id != blockId)
                     {
-                        firstId = (*it).id;
-                    }
-                }
+                        Json::Value send;
+                        send["method"] = "send";
+                        send["data"] = blockId;
 
-                if(firstId != "")
-                {
-                    bool status = true;
-                    std::string nextId = firstId;
-                    while(nextId != blockchain->getBlock(nextId).id && status)
-                    {
-                        for(it = blocks.begin(); it < blocks.end(); it++)
-                        {
-                            if((*it).id == nextId)
-                            {
-                                if(!blockchain->submitBlock((*it)))
-                                {
-                                    status = false;
-                                }
-                                std::vector<CryptoKernel::Blockchain::block>::iterator it2;
-                                for(it2 = blocks.begin(); it2 < blocks.end(); it2++)
-                                {
-                                    if((*it2).previousBlockId == (*it).id)
-                                    {
-                                        nextId = (*it2).id;
-                                    }
-                                }
-                                break;
-                            }
-                        }
+                        network->sendMessage(CryptoKernel::Storage::toString(send));
+
+                        found = false;
                     }
+
+                    blockId = Block.previousBlockId;
                 }
             }
             else if(command["method"].asString() == "send")
             {
-                std::string tipId = command["data"].asString();
-                std::vector<CryptoKernel::Blockchain::block> blocks;
-
-                while(tipId != "")
-                {
-                    blocks.push_back(blockchain->getBlock(tipId));
-                    tipId = blockchain->getBlock(tipId).previousBlockId;
-                }
-
                 Json::Value returning;
 
                 returning["method"] = "blocks";
+                returning["data"]["tipId"] = command["data"].asString();
 
-                std::vector<CryptoKernel::Blockchain::block>::iterator it;
-                for(it = blocks.begin(); it < blocks.end(); it++)
+                std::string tipId = command["data"].asString();
+
+                for(unsigned int i = 0; i < 200; i++)
                 {
-                    returning["data"].append(blockchain->blockToJson(*it));
+                    returning["data"]["blocks"].append(blockchain->blockToJson(blockchain->getBlock(tipId)));
+                    tipId = blockchain->getBlock(tipId).previousBlockId;
+                    if(tipId == "")
+                    {
+                        break;
+                    }
                 }
 
                 network->sendMessage(CryptoKernel::Storage::toString(returning));
