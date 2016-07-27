@@ -27,6 +27,7 @@ namespace CryptoCurrency
             bool updateAddressBalance(std::string name, double amount);
             bool sendToAddress(std::string publicKey, double amount, double fee);
             double getTotalBalance();
+            void rescan();
 
         private:
             CryptoKernel::Storage* addresses;
@@ -35,7 +36,6 @@ namespace CryptoCurrency
             Json::Value addressToJson(address Address);
             CryptoKernel::Blockchain* blockchain;
             address jsonToAddress(Json::Value Address);
-            void rescan();
     };
 }
 

@@ -12,6 +12,8 @@ CryptoCurrency::Wallet::Wallet(CryptoKernel::Blockchain* Blockchain, CryptoCurre
     blockchain = Blockchain;
     log = new CryptoKernel::Log();
     addresses = new CryptoKernel::Storage("./addressesdb");
+
+    rescan();
 }
 
 CryptoCurrency::Wallet::~Wallet()
@@ -40,8 +42,6 @@ CryptoCurrency::Wallet::address CryptoCurrency::Wallet::newAddress(std::string n
 
 CryptoCurrency::Wallet::address CryptoCurrency::Wallet::getAddressByName(std::string name)
 {
-    rescan();
-
     address Address;
 
     Address = jsonToAddress(addresses->get(name));
@@ -51,8 +51,6 @@ CryptoCurrency::Wallet::address CryptoCurrency::Wallet::getAddressByName(std::st
 
 CryptoCurrency::Wallet::address CryptoCurrency::Wallet::getAddressByKey(std::string publicKey)
 {
-    rescan();
-
     address Address;
 
     CryptoKernel::Storage::Iterator* it = addresses->newIterator();
@@ -201,8 +199,6 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount,
 
 double CryptoCurrency::Wallet::getTotalBalance()
 {
-    rescan();
-
     double balance = 0;
 
     CryptoKernel::Storage::Iterator* it = addresses->newIterator();
@@ -235,7 +231,7 @@ void CryptoCurrency::Wallet::rescan()
     }
 }
 
-void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet, CryptoCurrency::Protocol* protocol)
+void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet, CryptoCurrency::Protocol* protocol, CryptoKernel::Log* log)
 {
     CryptoKernel::Blockchain::block Block;
     wallet->newAddress("mining");
@@ -261,13 +257,20 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
         t = std::time(0);
         now = static_cast<uint64_t> (t);
 
+        uint64_t time2 = now;
+
         do
         {
-            if(Block.nonce % 50000 == 0)
+            t = std::time(0);
+            time2 = static_cast<uint64_t> (t);
+            if((time2 - now) % 120 == 0 && (time2 - now) > 0)
             {
-                uint64_t nonce = Block.nonce;
+                std::stringstream message;
+                message << "miner(): Hashrate: " << ((Block.nonce / (time2 - now)) / 1000.0f) << " kH/s";
+                log->printf(LOG_LEVEL_INFO, message.str());
                 Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
-                Block.nonce = nonce;
+                Block.nonce = 0;
+                now = time2;
             }
 
             Block.nonce += 1;
@@ -302,7 +305,9 @@ int main()
     CryptoKernel::Blockchain blockchain(&log);
     CryptoCurrency::Protocol protocol(&blockchain, &log);
     CryptoCurrency::Wallet wallet(&blockchain, &protocol);
-    std::thread minerThread(miner, &blockchain, &wallet, &protocol);
+    std::thread minerThread(miner, &blockchain, &wallet, &protocol, &log);
+
+    std::string tipId = blockchain.getBlock("tip").id;
 
     while(true)
     {
@@ -313,6 +318,13 @@ int main()
         {
             protocol.submitTransaction(*it);
         }
+
+        if(tipId != blockchain.getBlock("tip").id)
+        {
+            wallet.rescan();
+            tipId = blockchain.getBlock("tip").id;
+        }
+
         std::this_thread::sleep_for(std::chrono::milliseconds(120000));
     }
 
