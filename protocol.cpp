@@ -119,24 +119,30 @@ void CryptoCurrency::Protocol::handleEvent()
                 {
                     //Otherwise, request the next set of missing blocks
                     it = blockBuffer.newIterator();
-                    bool found = false;
                     std::string nextBlockId = "";
+                    for(it->SeekToFirst(); it->Valid(); it->Next())
+                    {
+                        if(it->value()["id"] != "")
+                        {
+                            nextBlockId = it->value()["id"].asString();
+                            break;
+                        }
+                    }
+                    delete it;
+
+                    bool found = false;
+
                     do
                     {
                         found = false;
-                        for(it->SeekToFirst(); it->Valid(); it->Next())
+                        CryptoKernel::Blockchain::block nextBlock = blockchain->jsonToBlock(blockBuffer.get(nextBlockId));
+                        if(nextBlock.id == nextBlockId && nextBlock.id != "")
                         {
-                            CryptoKernel::Blockchain::block nextBlock = blockchain->jsonToBlock(it->value());
-                            if(nextBlockId == "" || nextBlock.id == nextBlockId)
-                            {
-                                nextBlockId = nextBlock.previousBlockId;
-                                found = true;
-                                break;
-                            }
+                            found = true;
+                            nextBlockId = nextBlock.previousBlockId;
                         }
                     }
                     while(found);
-                    delete it;
 
                     Json::Value send;
                     send["method"] = "send";
