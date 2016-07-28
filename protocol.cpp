@@ -144,11 +144,14 @@ void CryptoCurrency::Protocol::handleEvent()
                     }
                     while(found);
 
-                    Json::Value send;
-                    send["method"] = "send";
-                    send["data"] = nextBlockId;
+                    if(blockchain->getBlock(nextBlockId).id != nextBlockId)
+                    {
+                        Json::Value send;
+                        send["method"] = "send";
+                        send["data"] = nextBlockId;
 
-                    network->sendMessage(CryptoKernel::Storage::toString(send));
+                        network->sendMessage(CryptoKernel::Storage::toString(send));
+                    }
                 }
             }
             else if(command["method"].asString() == "send")
