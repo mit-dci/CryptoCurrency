@@ -3,6 +3,7 @@
 #include <random>
 
 #include <cryptokernel/crypto.h>
+#include <cryptokernel/math.h>
 
 #include "wallet.h"
 
@@ -239,16 +240,6 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
     time_t t = std::time(0);
     uint64_t now = static_cast<uint64_t> (t);
 
-    std::stringstream buffer;
-    buffer << now << "_mining";
-
-    std::default_random_engine generator(now);
-    std::uniform_int_distribution<unsigned int> distribution(0, wallet->getTotalBalance() - 1);
-
-    wallet->newAddress(buffer.str());
-    std::string publicKey = wallet->getAddressByName(buffer.str()).publicKey;
-    wallet->sendToAddress(publicKey, distribution(generator), 0.1);
-
     while(true)
     {
         Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
@@ -276,25 +267,15 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
             Block.nonce += 1;
             Block.PoW = blockchain->calculatePoW(Block);
         }
-        while(!hex_greater(Block.target, Block.PoW));
+        while(!CryptoKernel::Math::hex_greater(Block.target, Block.PoW));
 
         CryptoKernel::Blockchain::block previousBlock;
         previousBlock = blockchain->getBlock(Block.previousBlockId);
-        std::string inverse = subtractHex("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", Block.PoW);
-        Block.totalWork = addHex(inverse, previousBlock.totalWork);
+        std::string inverse = CryptoKernel::Math::subtractHex("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", Block.PoW);
+        Block.totalWork = CryptoKernel::Math::addHex(inverse, previousBlock.totalWork);
 
         blockchain->submitBlock(Block);
         protocol->submitBlock(Block);
-
-        t = std::time(0);
-        now = static_cast<uint64_t> (t);
-
-        buffer.clear();
-        buffer << now << "_mining";
-
-        wallet->newAddress(buffer.str());
-        std::string publicKey = wallet->getAddressByName(buffer.str()).publicKey;
-        wallet->sendToAddress(publicKey, distribution(generator), 0.1);
     }
 }
 
