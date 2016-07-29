@@ -1,28 +1,28 @@
 {
-	"PoW" : "80d986a74068d49deebe37b5e261ff147b68e82b40389e71184397",
+	"PoW" : "34636263b71aa34b2356803ad327cc106ec7854b4033d2213d5c",
 	"coinbaseTx" : 
 	{
-		"id" : "7876e88f0e8b38c7d8495b0773c1258942077fcfed52be03d61c8ee3e5678a",
+		"id" : "cea3c638787d28257851cbfbb867ae84458cdf969f7ab71c168e775a1492a",
 		"outputs" : 
 		[
 			{
 				"data" : null,
-				"id" : "27c3c8883171c45591300c68af1fb0a1b5124fb4d29b431a41f19e3766045",
-				"nonce" : 1469812591,
+				"id" : "f58fd5cfbba375598145964dfb8eb516c875868839daebd7db4b7b45562657f",
+				"nonce" : 1469822104,
 				"publicKey" : "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3QDnSP1EjSAhcZB8RBcC\n5RRR85MdlCxRykhqtxn1R0MfGVWJHLtA9joGunr0wcE1plb6nyO0IgezseEylvoX\nRrl9C//N1yhFngTPRnT1ISjbEuU9fG5qo5Q+ffwGZ3R0qjsKs/Nbqaymk01/SN8w\nWAbsy0lAP4LYQbzZOdckW8ehuy3gsu37QfAOkF1szeYE701FkNInFe4jSqF++toa\nXtZqHbQOUiOldzH7RVaoYqfjM0H7sqrypBmCzO3SUBGw7JroW2k0vBDTsh+bk8qd\nzmcyF63w3knTz9OAWgAViMQkea0ZPOQ3Y6qVNeo+ch9h3PtWW/Zf8ZpfAlaZ6niK\n1wIDAQAB\n-----END PUBLIC KEY-----",
 				"signature" : "",
 				"value" : 50
 			}
 		],
-		"timestamp" : 1469812591
+		"timestamp" : 1469822104
 	},
 	"height" : 1,
-	"id" : "9a7e2214c38411eca3963d5f59f96a2665ea66cd40ae9536c9cc335f7eee37",
+	"id" : "359faba221c6a34c76efc18f81fcba9bce63fe4e99d5edcd0a075d7457e2d39",
 	"mainChain" : true,
-	"nonce" : 24227,
+	"nonce" : 5711409,
 	"previousBlockId" : "",
-	"target" : "ffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-	"timestamp" : 1469812591,
-	"totalWork" : ""
+	"target" : "ffffffffffffffffffffffffffffffffffffffffffffffffffff",
+	"timestamp" : 1469822104,
+	"totalWork" : "ffffffffffffcb9c9d9c48e55cb4dca97fc52cd833ef91387ab4bfcc2ddec2a3"
 }
 
