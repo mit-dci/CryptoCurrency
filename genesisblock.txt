@@ -1,26 +1,28 @@
 {
-        "PoW" : "1a915c875b1f02f9a84cc0901860b46bbb8fbcb9f54b7f52378eb1",
-        "coinbaseTx" :
-        {
-                "id" : "f7afd1ecf5af269549c2a76692e7ae293299a31bfd2356aa176e7fca4ba4c52",
-                "outputs" :
-                [
-                        {
-                                "data" : null,
-                                "id" : "c0484bab54a6a4f496e4dc42c5b31ce7a1897a423973a816f02646775a9c7e",
-                                "nonce" : 1468899825,
-                                "publicKey" : "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3QDnSP1EjSAhcZB8RBcC\n5RRR85MdlCxRykhqtxn1R0MfGVWJHLtA9joGunr0wcE1plb6nyO0IgezseEylvoX\nRrl9C//N1yhFngTPRnT1ISjbEuU9fG5qo5Q+ffwGZ3R0qjsKs/Nbqaymk01/SN8w\nWAbsy0lAP4LYQbzZOdckW8ehuy3gsu37QfAOkF1szeYE701FkNInFe4jSqF++toa\nXtZqHbQOUiOldzH7RVaoYqfjM0H7sqrypBmCzO3SUBGw7JroW2k0vBDTsh+bk8qd\nzmcyF63w3knTz9OAWgAViMQkea0ZPOQ3Y6qVNeo+ch9h3PtWW/Zf8ZpfAlaZ6niK\n1wIDAQAB\n-----END PUBLIC KEY-----\u0000",
-                                "signature" : "",
-                                "value" : 50
-                        }
-                ],
-                "timestamp" : 1468899825
-        },
-        "height" : 1,
-        "id" : "a04b19a331da1bc0f27f1f23f15def19c58f1b4be65fec63299b37b91749a97",
-        "nonce" : 35226,
-        "previousBlockId" : "",
-        "target" : "0000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-        "timestamp" : 1468899825,
-        "totalWork" : "1a915c875b1f02f9a84cc0901860b46bbb8fbcb9f54b7f52378eb1"
+	"PoW" : "80d986a74068d49deebe37b5e261ff147b68e82b40389e71184397",
+	"coinbaseTx" : 
+	{
+		"id" : "7876e88f0e8b38c7d8495b0773c1258942077fcfed52be03d61c8ee3e5678a",
+		"outputs" : 
+		[
+			{
+				"data" : null,
+				"id" : "27c3c8883171c45591300c68af1fb0a1b5124fb4d29b431a41f19e3766045",
+				"nonce" : 1469812591,
+				"publicKey" : "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3QDnSP1EjSAhcZB8RBcC\n5RRR85MdlCxRykhqtxn1R0MfGVWJHLtA9joGunr0wcE1plb6nyO0IgezseEylvoX\nRrl9C//N1yhFngTPRnT1ISjbEuU9fG5qo5Q+ffwGZ3R0qjsKs/Nbqaymk01/SN8w\nWAbsy0lAP4LYQbzZOdckW8ehuy3gsu37QfAOkF1szeYE701FkNInFe4jSqF++toa\nXtZqHbQOUiOldzH7RVaoYqfjM0H7sqrypBmCzO3SUBGw7JroW2k0vBDTsh+bk8qd\nzmcyF63w3knTz9OAWgAViMQkea0ZPOQ3Y6qVNeo+ch9h3PtWW/Zf8ZpfAlaZ6niK\n1wIDAQAB\n-----END PUBLIC KEY-----",
+				"signature" : "",
+				"value" : 50
+			}
+		],
+		"timestamp" : 1469812591
+	},
+	"height" : 1,
+	"id" : "9a7e2214c38411eca3963d5f59f96a2665ea66cd40ae9536c9cc335f7eee37",
+	"mainChain" : true,
+	"nonce" : 24227,
+	"previousBlockId" : "",
+	"target" : "ffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+	"timestamp" : 1469812591,
+	"totalWork" : ""
 }
+
