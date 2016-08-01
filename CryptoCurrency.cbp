@@ -46,6 +46,9 @@
 					<Add option="-lcrypto" />
 					<Add option="-lenet" />
 					<Add option="-lleveldb" />
+					<Add option="-lmicrohttpd" />
+					<Add option="-ljsonrpccpp-common" />
+					<Add option="-ljsonrpccpp-server" />
 				</Linker>
 			</Target>
 			<Target title="Release-Unix">
@@ -64,6 +67,9 @@
 					<Add option="-lcrypto" />
 					<Add option="-lenet" />
 					<Add option="-lleveldb" />
+					<Add option="-lmicrohttpd" />
+					<Add option="-ljsonrpccpp-common" />
+					<Add option="-ljsonrpccpp-server" />
 				</Linker>
 			</Target>
 		</Build>
@@ -72,8 +78,12 @@
 			<Add option="-std=c++14" />
 			<Add directory="../../James" />
 		</Compiler>
+		<Unit filename="cryptoclient.h" />
+		<Unit filename="cryptoserver.h" />
+		<Unit filename="main.cpp" />
 		<Unit filename="protocol.cpp" />
 		<Unit filename="protocol.h" />
+		<Unit filename="rpcserver.cpp" />
 		<Unit filename="wallet.cpp" />
 		<Unit filename="wallet.h" />
 		<Extensions>
