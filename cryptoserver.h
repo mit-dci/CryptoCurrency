@@ -7,14 +7,16 @@
 
 #include <jsonrpccpp/server.h>
 
-class CryptoServer : public jsonrpc::AbstractServer<CryptoServer>
+#include "wallet.h"
+
+class CryptoRPCServer : public jsonrpc::AbstractServer<CryptoRPCServer>
 {
     public:
-        CryptoServer(jsonrpc::AbstractServerConnector &conn, jsonrpc::serverVersion_t type = jsonrpc::JSONRPC_SERVER_V2) : jsonrpc::AbstractServer<CryptoServer>(conn, type)
+        CryptoRPCServer(jsonrpc::AbstractServerConnector &conn, jsonrpc::serverVersion_t type = jsonrpc::JSONRPC_SERVER_V2) : jsonrpc::AbstractServer<CryptoRPCServer>(conn, type)
         {
-            this->bindAndAddMethod(jsonrpc::Procedure("getinfo", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT,  NULL), &CryptoServer::getinfoI);
-            this->bindAndAddMethod(jsonrpc::Procedure("account", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "account",jsonrpc::JSON_STRING, NULL), &CryptoServer::accountI);
-            this->bindAndAddMethod(jsonrpc::Procedure("sendtoaddress", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN, "address",jsonrpc::JSON_STRING,"amount",jsonrpc::JSON_REAL,"fee",jsonrpc::JSON_REAL, NULL), &CryptoServer::sendtoaddressI);
+            this->bindAndAddMethod(jsonrpc::Procedure("getinfo", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT,  NULL), &CryptoRPCServer::getinfoI);
+            this->bindAndAddMethod(jsonrpc::Procedure("account", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "account",jsonrpc::JSON_STRING, NULL), &CryptoRPCServer::accountI);
+            this->bindAndAddMethod(jsonrpc::Procedure("sendtoaddress", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN, "address",jsonrpc::JSON_STRING,"amount",jsonrpc::JSON_REAL,"fee",jsonrpc::JSON_REAL, NULL), &CryptoRPCServer::sendtoaddressI);
         }
 
         inline virtual void getinfoI(const Json::Value &request, Json::Value &response)
@@ -34,5 +36,22 @@ class CryptoServer : public jsonrpc::AbstractServer<CryptoServer>
         virtual Json::Value account(const std::string& account) = 0;
         virtual bool sendtoaddress(const std::string& address, double amount, double fee) = 0;
 };
+
+class CryptoServer : public CryptoRPCServer
+{
+    public:
+        CryptoServer(jsonrpc::AbstractServerConnector &connector);
+
+        virtual Json::Value getinfo();
+        virtual Json::Value account(const std::string& account);
+        virtual bool sendtoaddress(const std::string& address, double amount, double fee);
+        void setWallet(CryptoCurrency::Wallet* Wallet, CryptoCurrency::Protocol* Protocol, CryptoKernel::Blockchain* Blockchain);
+
+    private:
+        CryptoCurrency::Wallet* wallet;
+        CryptoCurrency::Protocol* protocol;
+        CryptoKernel::Blockchain* blockchain;
+};
+
 
 #endif //JSONRPC_CPP_STUB_CRYPTOSERVER_H_

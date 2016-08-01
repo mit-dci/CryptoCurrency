@@ -210,3 +210,8 @@ bool CryptoCurrency::Protocol::submitTransaction(CryptoKernel::Blockchain::trans
         return false;
     }
 }
+
+unsigned int CryptoCurrency::Protocol::getConnections()
+{
+    return network->getConnections();
+}

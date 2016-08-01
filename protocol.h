@@ -13,6 +13,7 @@ namespace CryptoCurrency
             ~Protocol();
             bool submitTransaction(CryptoKernel::Blockchain::transaction tx);
             bool submitBlock(CryptoKernel::Blockchain::block Block);
+            unsigned int getConnections();
 
         private:
             CryptoKernel::Network* network;
