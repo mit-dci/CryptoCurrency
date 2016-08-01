@@ -161,18 +161,21 @@ void CryptoCurrency::Protocol::handleEvent()
                 Json::Value returning;
                 returning["method"] = "blocks";
 
-                for(unsigned int i = 0; i < 200; i++)
+                if(blockchain->getBlock(tipId).id == tipId && tipId != "")
                 {
-                    CryptoKernel::Blockchain::block Block = blockchain->getBlock(tipId);
-                    returning["data"].append(blockchain->blockToJson(Block));
-                    if(Block.previousBlockId == "")
+                    for(unsigned int i = 0; i < 200; i++)
                     {
-                        break;
+                        CryptoKernel::Blockchain::block Block = blockchain->getBlock(tipId);
+                        returning["data"].append(blockchain->blockToJson(Block));
+                        if(Block.previousBlockId == "")
+                        {
+                            break;
+                        }
+                        tipId = Block.previousBlockId;
                     }
-                    tipId = Block.previousBlockId;
-                }
 
-                network->sendMessage(CryptoKernel::Storage::toString(returning));
+                    network->sendMessage(CryptoKernel::Storage::toString(returning));
+                }
             }
         }
     }
