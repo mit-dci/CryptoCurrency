@@ -58,7 +58,12 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../CryptoKernel/bin/Debug/libCryptoKernel.so" />
+					<Add option="-lCryptoKernel" />
+					<Add option="-ljsoncpp" />
+					<Add option="-pthread" />
+					<Add option="-lcrypto" />
+					<Add option="-lenet" />
+					<Add option="-lleveldb" />
 				</Linker>
 			</Target>
 		</Build>
