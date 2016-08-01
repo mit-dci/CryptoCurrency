@@ -1,27 +1,27 @@
 {
-	"PoW" : "0c4c0e2fa887bcf9d82c7cee82558b4ecd33c2fc39851bdae7022a",
-	"coinbaseTx" : 
-	{
-		"id" : "ae8fdf96dbfeea784d2573712242441b4c97954cf299b16098c7a8694daa253e",
-		"outputs" : 
-		[
-			{
-				"data" : null,
-				"id" : "c3d47dd964f14975bc3c267039b7312121df4ab96beb56877b9ac6c3be9bc8",
-				"nonce" : 2358643111,
-				"publicKey" : "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3QDnSP1EjSAhcZB8RBcC\n5RRR85MdlCxRykhqtxn1R0MfGVWJHLtA9joGunr0wcE1plb6nyO0IgezseEylvoX\nRrl9C//N1yhFngTPRnT1ISjbEuU9fG5qo5Q+ffwGZ3R0qjsKs/Nbqaymk01/SN8w\nWAbsy0lAP4LYQbzZOdckW8ehuy3gsu37QfAOkF1szeYE701FkNInFe4jSqF++toa\nXtZqHbQOUiOldzH7RVaoYqfjM0H7sqrypBmCzO3SUBGw7JroW2k0vBDTsh+bk8qd\nzmcyF63w3knTz9OAWgAViMQkea0ZPOQ3Y6qVNeo+ch9h3PtWW/Zf8ZpfAlaZ6niK\n1wIDAQAB\n-----END PUBLIC KEY-----",
-				"signature" : "",
-				"value" : 50
-			}
-		],
-		"timestamp" : 1469831809
-	},
-	"height" : 1,
-	"id" : "b040c6c6b468235c1e3e454da8dca0c2e6ebb57cb636df8a9ab287565b37f1f",
-	"mainChain" : true,
-	"nonce" : 276150,
-	"previousBlockId" : "",
-	"target" : "fffffffffffffffffffffffffffffffffffffffffffffffffffff",
-	"timestamp" : 1469831809,
-	"totalWork" : "fffffffffff3b3f1d05778430627d383117daa74b132cc3d03c67ae42518fdd5"
+        "PoW" : "ece55f70ed34e921331b1d8b713e71c0d150d8171959cdd2f1b6",
+        "coinbaseTx" :
+        {
+                "id" : "253dc333968382eb88c5f71ab53c35f768c6887a17513845d6862131c424d2",
+                "outputs" :
+                [
+                        {
+                                "data" : null,
+                                "id" : "f3f380db75b1dec07b13c5d5a5d1fc9677513ae623f086b47a926bc954552ec",
+                                "nonce" : 870664703,
+                                "publicKey" : "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3QDnSP1EjSAhcZB8RBcC\n5RRR85MdlCxRykhqtxn1R0MfGVWJHLtA9joGunr0wcE1plb6nyO0IgezseEylvoX\nRrl9C//N1yhFngTPRnT1ISjbEuU9fG5qo5Q+ffwGZ3R0qjsKs/Nbqaymk01/SN8w\nWAbsy0lAP4LYQbzZOdckW8ehuy3gsu37QfAOkF1szeYE701FkNInFe4jSqF++toa\nXtZqHbQOUiOldzH7RVaoYqfjM0H7sqrypBmCzO3SUBGw7JroW2k0vBDTsh+bk8qd\nzmcyF63w3knTz9OAWgAViMQkea0ZPOQ3Y6qVNeo+ch9h3PtWW/Zf8ZpfAlaZ6niK\n1wIDAQAB\n-----END PUBLIC KEY-----",
+                                "signature" : "",
+                                "value" : 50
+                        }
+                ],
+                "timestamp" : 1470057716
+        },
+        "height" : 1,
+        "id" : "62b878bbe918b7e3a21df6182c718d941e2f3f43262c89e79ce10902ade39b5",
+        "mainChain" : true,
+        "nonce" : 2739827,
+        "previousBlockId" : "",
+        "target" : "ffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "timestamp" : 1470057716,
+        "totalWork" : "ffffffffffff131aa08f12cb16decce4e2748ec18e3f2eaf27e8e6a6322d0e49"
 }

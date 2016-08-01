@@ -247,6 +247,7 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
         now = static_cast<uint64_t> (t);
 
         uint64_t time2 = now;
+        uint64_t count = 0;
 
         do
         {
@@ -255,13 +256,16 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
             if((time2 - now) % 120 == 0 && (time2 - now) > 0)
             {
                 std::stringstream message;
-                message << "miner(): Hashrate: " << ((Block.nonce / (time2 - now)) / 1000.0f) << " kH/s";
+                message << "miner(): Hashrate: " << ((count / (time2 - now)) / 1000.0f) << " kH/s";
                 log->printf(LOG_LEVEL_INFO, message.str());
+                uint64_t nonce = Block.nonce;
                 Block = blockchain->generateMiningBlock(wallet->getAddressByName("mining").publicKey);
-                Block.nonce = 0;
+                Block.nonce = nonce;
                 now = time2;
+                count = 0;
             }
 
+            count += 1;
             Block.nonce += 1;
             Block.PoW = blockchain->calculatePoW(Block);
         }
