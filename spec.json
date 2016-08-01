@@ -1,0 +1,31 @@
+[
+    {
+        "name": "getinfo",
+        "returns": {
+            "version": "5.0.0",
+            "connections": 5,
+            "balance": 5.04,
+            "height": 560
+        }
+    },
+    {
+        "name": "account",
+        "params": {
+            "account": "myaccount"
+        },
+        "returns": {
+            "name": "myaccount",
+            "balance": 29.003,
+            "address": "someaddress"
+        }
+    },
+    {
+        "name": "sendtoaddress",
+        "params": {
+            "address": "someaddress",
+            "amount": 39.09,
+            "fee": 2.3        
+        },
+        "returns": true
+    }
+]
