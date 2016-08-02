@@ -1,3 +1,4 @@
+#include <sstream>
 #include <algorithm>
 
 #include <cryptokernel/crypto.h>
