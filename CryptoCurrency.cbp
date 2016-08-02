@@ -43,14 +43,15 @@
 					<Add option="-lCryptoKernel" />
 					<Add option="-ljsoncpp" />
 					<Add option="-pthread" />
-					<Add option="-lcrypto" />
 					<Add option="-lenet" />
+					<Add option="-lcrypto" />
 					<Add option="-lleveldb" />
 					<Add option="-lmicrohttpd" />
 					<Add option="-ljsonrpccpp-common" />
 					<Add option="-ljsonrpccpp-server" />
 					<Add option="-lcurl" />
 					<Add option="-ljsonrpccpp-client" />
+					<Add option="-ldl" />
 				</Linker>
 			</Target>
 			<Target title="Release-Unix">
@@ -74,6 +75,7 @@
 					<Add option="-ljsonrpccpp-server" />
 					<Add option="-lcurl" />
 					<Add option="-ljsonrpccpp-client" />
+					<Add option="-ldl" />
 				</Linker>
 			</Target>
 		</Build>
