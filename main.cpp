@@ -68,7 +68,6 @@ int main(int argc, char* argv[])
 {
     if(argc < 2)
     {
-        CryptoKernel::Crypto::init();
         CryptoKernel::Log log("CryptoKernel.log", true);
         CryptoKernel::Blockchain blockchain(&log);
         CryptoCurrency::Protocol protocol(&blockchain, &log);

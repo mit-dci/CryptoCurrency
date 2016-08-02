@@ -148,6 +148,12 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount,
 
     CryptoKernel::Blockchain::output toThem;
     toThem.value = amount;
+
+    CryptoKernel::Crypto crypto;
+    if(!crypto.setPublicKey(publicKey))
+    {
+        return false;
+    }
     toThem.publicKey = publicKey;
 
     time_t t = std::time(0);
@@ -165,8 +171,6 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount,
     change.publicKey = Address.publicKey;
     change.nonce = now;
     change.id = blockchain->calculateOutputId(change);
-
-    CryptoKernel::Crypto crypto;
 
     std::vector<CryptoKernel::Blockchain::output> outputs;
     outputs.push_back(change);
