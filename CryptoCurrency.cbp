@@ -15,6 +15,11 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-ljsonrpccpp-server" />
+					<Add option="-ljsonrpccpp-client" />
+					<Add option="-ljsonrpccpp-common" />
+					<Add option="-lcurl" />
+					<Add option="-lmicrohttpd" />
 					<Add library="../cryptokernel/bin/Debug/libCryptoKernel.a" />
 				</Linker>
 			</Target>
@@ -28,6 +33,11 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-ljsonrpccpp-server" />
+					<Add option="-ljsonrpccpp-client" />
+					<Add option="-ljsonrpccpp-common" />
+					<Add option="-lcurl" />
+					<Add option="-lmicrohttpd" />
 					<Add library="../cryptokernel/bin/Release/libCryptoKernel.a" />
 				</Linker>
 			</Target>
