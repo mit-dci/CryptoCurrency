@@ -49,6 +49,8 @@
 					<Add option="-lmicrohttpd" />
 					<Add option="-ljsonrpccpp-common" />
 					<Add option="-ljsonrpccpp-server" />
+					<Add option="-lcurl" />
+					<Add option="-ljsonrpccpp-client" />
 				</Linker>
 			</Target>
 			<Target title="Release-Unix">
@@ -70,6 +72,8 @@
 					<Add option="-lmicrohttpd" />
 					<Add option="-ljsonrpccpp-common" />
 					<Add option="-ljsonrpccpp-server" />
+					<Add option="-lcurl" />
+					<Add option="-ljsonrpccpp-client" />
 				</Linker>
 			</Target>
 		</Build>

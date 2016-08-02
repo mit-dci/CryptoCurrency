@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <cryptokernel/crypto.h>
 
 #include "wallet.h"
@@ -215,7 +217,6 @@ void CryptoCurrency::Wallet::rescan()
     {
         address Address;
         Address = jsonToAddress(it->value());
-        Address.balance = blockchain->getBalance(Address.publicKey);
         tempAddresses.push_back(Address);
     }
     delete it;
