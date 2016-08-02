@@ -101,8 +101,6 @@ int main(int argc, char* argv[])
         }
 
         server.StopListening();
-
-        CryptoKernel::Crypto::destroy();
     }
     else
     {
