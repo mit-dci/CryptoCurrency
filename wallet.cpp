@@ -196,7 +196,10 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, uint64_t amoun
     tx.timestamp = now;
     tx.id = blockchain->calculateTransactionId(tx);
 
-    blockchain->submitTransaction(tx);
+    if(!blockchain->submitTransaction(tx))
+    {
+        return false;
+    }
 
     protocol->submitTransaction(tx);
 
