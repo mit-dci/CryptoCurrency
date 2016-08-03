@@ -19,13 +19,13 @@ namespace CryptoCurrency
                 std::string name;
                 std::string publicKey;
                 std::string privateKey;
-                double balance;
+                uint64_t balance;
             };
             address newAddress(std::string name);
             address getAddressByName(std::string name);
             address getAddressByKey(std::string publicKey);
-            bool updateAddressBalance(std::string name, double amount);
-            bool sendToAddress(std::string publicKey, double amount, double fee);
+            bool updateAddressBalance(std::string name, uint64_t amount);
+            bool sendToAddress(std::string publicKey, uint64_t amount, uint64_t fee);
             double getTotalBalance();
             void rescan();
 

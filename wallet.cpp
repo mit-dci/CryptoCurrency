@@ -85,12 +85,12 @@ CryptoCurrency::Wallet::address CryptoCurrency::Wallet::jsonToAddress(Json::Valu
     returning.name = Address["name"].asString();
     returning.publicKey = Address["publicKey"].asString();
     returning.privateKey = Address["privateKey"].asString();
-    returning.balance = Address["balance"].asDouble();
+    returning.balance = Address["balance"].asUInt64();
 
     return returning;
 }
 
-bool CryptoCurrency::Wallet::updateAddressBalance(std::string name, double amount)
+bool CryptoCurrency::Wallet::updateAddressBalance(std::string name, uint64_t amount)
 {
     address Address;
     Address = jsonToAddress(addresses->get(name));
@@ -106,7 +106,7 @@ bool CryptoCurrency::Wallet::updateAddressBalance(std::string name, double amoun
     }
 }
 
-bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, double amount, double fee)
+bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, uint64_t amount, uint64_t fee)
 {
     if(getTotalBalance() < amount + fee)
     {

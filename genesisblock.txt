@@ -1,27 +1,27 @@
 {
-	"PoW" : "fa43f5d9b22226d6541dd4d42aafbd7a53fe5c711a8d1767b7265d",
-	"coinbaseTx" : 
-	{
-		"id" : "81b79df3f184b88a577129ccc5c15715d93aa8416b8911eeb1859144629d93",
-		"outputs" : 
-		[
-			{
-				"data" : null,
-				"id" : "9fee3a175df73476dd3b3b8d8a99885e128e3940f4d31bcac3c9f11e58c4bc57",
-				"nonce" : 1388941103,
-				"publicKey" : "BGn5vwPVFMZxHiZIeOq/8Z2HOSdvhJ3NxwfdDwurYzdD9lMNSyFTwRjiTBo5QE4jdgZQxB+UFu0JcOf7mteyExY=",
-				"signature" : "",
-				"value" : 50
-			}
-		],
-		"timestamp" : 1470163102
-	},
-	"height" : 1,
-	"id" : "6366a9579b5cdd51b8890f3e655c3869b4f6588b2203aac494db0e966ef5ac6",
-	"mainChain" : true,
-	"nonce" : 75581,
-	"previousBlockId" : "",
-	"target" : "ffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-	"timestamp" : 1470163102,
-	"totalWork" : "ffffffffff05bc0a264dddd929abe22b2bd5504285ac01a38ee572e89848d9a2"
+        "PoW" : "a0736ef35ef67a63e5f8accbff646ad7f31f8adcaa71dfa44a1149",
+        "coinbaseTx" :
+        {
+                "id" : "9bf39d3b62cafb38f4b5c7281293999a47313afb7327929c15d08545c4",
+                "outputs" :
+                [
+                        {
+                                "data" : null,
+                                "id" : "8d416139e062aed0a9eff0dccf1a818d3f8bcc40bb6990fe44fab5089fb3e80",
+                                "nonce" : 2672529464,
+                                "publicKey" : "BGn5vwPVFMZxHiZIeOq/8Z2HOSdvhJ3NxwfdDwurYzdD9lMNSyFTwRjiTBo5QE4jdgZQxB+UFu0JcOf7mteyExY=",
+                                "signature" : "",
+                                "value" : 5000000000
+                        }
+                ],
+                "timestamp" : 1470236173
+        },
+        "height" : 1,
+        "id" : "85921dd96666c7bb649793ed582d81fe46f7ce112a7e412dec22c8ad82bbbab",
+        "mainChain" : true,
+        "nonce" : 46679,
+        "previousBlockId" : "",
+        "target" : "ffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "timestamp" : 1470236173,
+        "totalWork" : "ffffffffff5f8c910ca109859c1a075334009b95280ce07523558e205bb5eeb6"
 }
