@@ -1,3 +1,6 @@
+#include <sstream>
+#include <iomanip>
+
 #include "cryptoserver.h"
 
 CryptoServer::CryptoServer(jsonrpc::AbstractServerConnector &connector) : CryptoRPCServer(connector)
@@ -19,7 +22,9 @@ Json::Value CryptoServer::getinfo()
     returning["version"] = "0.0.1";
     returning["connections"] = protocol->getConnections();
     double balance = wallet->getTotalBalance() / 100000000.0;
-    returning["balance"] = balance;
+    std::stringstream buffer;
+    buffer << std::setprecision(8) << balance;
+    returning["balance"] = buffer.str();
     returning["height"] = blockchain->getBlock("tip").height;
 
     return returning;
@@ -35,7 +40,9 @@ Json::Value CryptoServer::account(const std::string& account)
 
     returning["name"] = newAccount.name;
     double balance = newAccount.balance / 100000000.0;
-    returning["balance"] = balance;
+    std::stringstream buffer;
+    buffer << std::setprecision(8) << balance;
+    returning["balance"] = buffer.str();
     returning["address"] = newAccount.publicKey;
 
     return returning;

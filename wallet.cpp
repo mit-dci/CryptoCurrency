@@ -44,8 +44,9 @@ CryptoCurrency::Wallet::address CryptoCurrency::Wallet::getAddressByName(std::st
     address Address;
 
     Address = jsonToAddress(addresses->get(name));
+    updateAddressBalance(Address.name, blockchain->getBalance(Address.publicKey));
 
-    return Address;
+    return jsonToAddress(addresses->get(name));
 }
 
 CryptoCurrency::Wallet::address CryptoCurrency::Wallet::getAddressByKey(std::string publicKey)
@@ -55,7 +56,7 @@ CryptoCurrency::Wallet::address CryptoCurrency::Wallet::getAddressByKey(std::str
     CryptoKernel::Storage::Iterator* it = addresses->newIterator();
     for(it->SeekToFirst(); it->Valid(); it->Next())
     {
-        if(it->value()["publicKey"] == publicKey)
+        if(it->value()["publicKey"].asString() == publicKey)
         {
             Address = jsonToAddress(it->value());
             break;
@@ -63,7 +64,9 @@ CryptoCurrency::Wallet::address CryptoCurrency::Wallet::getAddressByKey(std::str
     }
     delete it;
 
-    return Address;
+    updateAddressBalance(Address.name, blockchain->getBalance(Address.publicKey));
+
+    return jsonToAddress(addresses->get(Address.name));
 }
 
 Json::Value CryptoCurrency::Wallet::addressToJson(address Address)
@@ -202,6 +205,8 @@ bool CryptoCurrency::Wallet::sendToAddress(std::string publicKey, uint64_t amoun
 
 double CryptoCurrency::Wallet::getTotalBalance()
 {
+    rescan();
+
     double balance = 0;
 
     CryptoKernel::Storage::Iterator* it = addresses->newIterator();

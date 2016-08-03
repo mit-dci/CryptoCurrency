@@ -79,8 +79,6 @@ int main(int argc, char* argv[])
         server.setWallet(&wallet, &protocol, &blockchain);
         server.StartListening();
 
-        std::string tipId = blockchain.getBlock("tip").id;
-
         while(true)
         {
             protocol.submitBlock(blockchain.getBlock("tip"));
@@ -89,12 +87,6 @@ int main(int argc, char* argv[])
             for(it = unconfirmedTransactions.begin(); it < unconfirmedTransactions.end(); it++)
             {
                 protocol.submitTransaction(*it);
-            }
-
-            if(tipId != blockchain.getBlock("tip").id)
-            {
-                wallet.rescan();
-                tipId = blockchain.getBlock("tip").id;
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(120000));
