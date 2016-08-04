@@ -76,7 +76,7 @@ Json::Value CryptoCurrency::Wallet::addressToJson(address Address)
     returning["name"] = Address.name;
     returning["publicKey"] = Address.publicKey;
     returning["privateKey"] = Address.privateKey;
-    returning["balance"] = Address.balance;
+    returning["balance"] = static_cast<unsigned long long int>(Address.balance);
 
     return returning;
 }
