@@ -12,7 +12,7 @@ First build and install CryptoKernel using the instructions here: https://github
 sudo apt-get update
 sudo apt-get install libcurl4-openssl-dev libmicrohttpd-dev libjsonrpccpp-dev
 
-git clone https://github.com/metalicjames/CryptoKernel.git
+git clone https://github.com/metalicjames/CryptoCurrency.git
 cd CryptoCurrency
 chmod +x build.sh
 ./build.sh
