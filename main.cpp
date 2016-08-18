@@ -81,12 +81,34 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
     }
 }
 
+class MyBlockchain : public CryptoKernel::Blockchain
+{
+    private:
+        uint64_t getBlockReward(const uint64_t height)
+        {
+            if(height > 2)
+            {
+                return 5000000000 / std::log(height);
+            }
+            else
+            {
+                return 5000000000;
+            }
+        }
+
+        std::string PoWFunction(const std::string inputString)
+        {
+            CryptoKernel::Crypto crypto;
+            return crypto.sha256(inputString);
+        }
+};
+
 int main(int argc, char* argv[])
 {
     if(argc < 2)
     {
         CryptoKernel::Log log("CryptoKernel.log", true);
-        CryptoKernel::Blockchain blockchain(&log);
+        CryptoKernel::Blockchain blockchain(&log, 150);
         CryptoCurrency::Protocol protocol(&blockchain, &log);
         CryptoCurrency::Wallet wallet(&blockchain, &protocol);
         std::thread minerThread(miner, &blockchain, &wallet, &protocol, &log);
