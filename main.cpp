@@ -83,6 +83,12 @@ void miner(CryptoKernel::Blockchain* blockchain, CryptoCurrency::Wallet* wallet,
 
 class MyBlockchain : public CryptoKernel::Blockchain
 {
+    public:
+        MyBlockchain(CryptoKernel::Log* GlobalLog, const uint64_t blockTime) : CryptoKernel::Blockchain(GlobalLog, blockTime)
+        {
+
+        }
+
     private:
         uint64_t getBlockReward(const uint64_t height)
         {
@@ -108,7 +114,9 @@ int main(int argc, char* argv[])
     if(argc < 2)
     {
         CryptoKernel::Log log("CryptoKernel.log", true);
-        CryptoKernel::Blockchain blockchain(&log, 150);
+        //CryptoKernel::Blockchain blockchain(&log, 150);
+        MyBlockchain blockchain(&log, 150);
+        blockchain.loadChain();
         CryptoCurrency::Protocol protocol(&blockchain, &log);
         CryptoCurrency::Wallet wallet(&blockchain, &protocol);
         std::thread minerThread(miner, &blockchain, &wallet, &protocol, &log);
