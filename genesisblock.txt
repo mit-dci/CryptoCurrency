@@ -1,27 +1,27 @@
 {
-        "PoW" : "a0736ef35ef67a63e5f8accbff646ad7f31f8adcaa71dfa44a1149",
-        "coinbaseTx" :
-        {
-                "id" : "9bf39d3b62cafb38f4b5c7281293999a47313afb7327929c15d08545c4",
-                "outputs" :
-                [
-                        {
-                                "data" : null,
-                                "id" : "8d416139e062aed0a9eff0dccf1a818d3f8bcc40bb6990fe44fab5089fb3e80",
-                                "nonce" : 2672529464,
-                                "publicKey" : "BGn5vwPVFMZxHiZIeOq/8Z2HOSdvhJ3NxwfdDwurYzdD9lMNSyFTwRjiTBo5QE4jdgZQxB+UFu0JcOf7mteyExY=",
-                                "signature" : "",
-                                "value" : 5000000000
-                        }
-                ],
-                "timestamp" : 1470236173
-        },
-        "height" : 1,
-        "id" : "85921dd96666c7bb649793ed582d81fe46f7ce112a7e412dec22c8ad82bbbab",
-        "mainChain" : true,
-        "nonce" : 46679,
-        "previousBlockId" : "",
-        "target" : "ffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-        "timestamp" : 1470236173,
-        "totalWork" : "ffffffffff5f8c910ca109859c1a075334009b95280ce07523558e205bb5eeb6"
+	"PoW" : "0000029dea12168cf9ca699a687cdd87d63975aa2ec0bc06489d012f5c6d4cd1",
+	"coinbaseTx" : 
+	{
+		"id" : "1ce1d42f661c65faf54b77080500ce899362b80e774d823962d372373c2e916e",
+		"outputs" : 
+		[
+			{
+				"data" : null,
+				"id" : "cce82f3eb6e97d98a58025d42f1b79f5bb62b8a94d9b85afc02f0fbbc7fba4a0",
+				"nonce" : 2227892703,
+				"publicKey" : "BL8ERakVzl7UZm1JmhdWxsdGIgHdJAUQ9LW6HKTrbtnum6HLAwd7nlTWQfpkhKupsKRjXbL1LnaPVd20ld+4UIM=",
+				"signature" : "",
+				"value" : 5000000000
+			}
+		],
+		"timestamp" : 1480448674
+	},
+	"height" : 1,
+	"id" : "d190d6119e1014a15b6cb0bc90a10419c446417fe21f33bc88482c040e07fa2a",
+	"mainChain" : true,
+	"nonce" : 146850,
+	"previousBlockId" : "",
+	"target" : "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+	"timestamp" : 1480448674,
+	"totalWork" : "fffffd6215ede973063596659783227829c68a55d13f43f9b762fed0a392b32e"
 }
